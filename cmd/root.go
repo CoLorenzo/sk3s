@@ -26,4 +26,7 @@ func init() {
 	rootCmd.AddCommand(installSearchCmd)
 	rootCmd.AddCommand(installCmd)
 	rootCmd.AddCommand(uninstallCmd)
+	rootCmd.AddCommand(nodesCmd)
+	rootCmd.AddCommand(nodeAddCmd)
+	rootCmd.AddCommand(nodeRmCmd)
 }
