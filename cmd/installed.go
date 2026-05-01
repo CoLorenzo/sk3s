@@ -18,8 +18,14 @@ var installedCmd = &cobra.Command{
 			pkgType string
 			exclude []string
 		}
+		defaultPlaybooks := []string{
+			"deploy_all",
+			"charts_cleanup", "charts_deploy",
+			"image_cleanup", "image_deploy",
+			"reboot", "reset", "site", "upgrade",
+		}
 		dirs := []dirType{
-			{dstPlaybooks, "playbook", []string{"deploy_all.yaml"}},
+			{dstPlaybooks, "playbook", defaultPlaybooks},
 			{dstManifests, "manifest", nil},
 			{dstCharts, "chart", nil},
 		}
@@ -60,8 +66,9 @@ var installedCmd = &cobra.Command{
 }
 
 func isExcluded(name string, list []string) bool {
+	stem := strings.TrimSuffix(name, filepath.Ext(name))
 	for _, ex := range list {
-		if name == ex {
+		if stem == ex {
 			return true
 		}
 	}

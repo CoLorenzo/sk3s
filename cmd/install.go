@@ -28,6 +28,8 @@ var installCmd = &cobra.Command{
 
 		filename := filepath.Base(match.fullPath)
 
+		noApply, _ := cmd.Flags().GetBool("no-apply")
+
 		switch match.pkgType {
 		case "playbook":
 			dst := filepath.Join(dstPlaybooks, filename)
@@ -39,6 +41,9 @@ var installCmd = &cobra.Command{
 				return fmt.Errorf("updating deploy_all.yaml: %w", err)
 			}
 			fmt.Println("Updated ./playbooks/deploy_all.yaml")
+			if noApply {
+				return nil
+			}
 			fmt.Println("Starting installation...")
 			return runApply(filename)
 
@@ -67,6 +72,10 @@ var installCmd = &cobra.Command{
 
 		return nil
 	},
+}
+
+func init() {
+	installCmd.Flags().Bool("no-apply", false, "copy files without running apply.sh")
 }
 
 // findPackageFile searches all source dirs for the best fuzzy match.
