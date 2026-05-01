@@ -9,11 +9,14 @@ import (
 )
 
 var initCmd = &cobra.Command{
-	Use:   "init <project-name>",
+	Use:   "init [project-name]",
 	Short: "Initialize a new sk3s project by cloning the Ansible template",
-	Args:  cobra.ExactArgs(1),
+	Args:  cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		projectName := args[0]
+		projectName := "sk3s-ansible"
+		if len(args) > 0 {
+			projectName = args[0]
+		}
 		fmt.Printf("Initializing project: %s\n", projectName)
 
 		c := exec.Command("git", "clone", "https://github.com/CoLorenzo/Sk3s-ansible", projectName)
