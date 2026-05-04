@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 )
@@ -48,7 +49,7 @@ var operationActiveCmd = &cobra.Command{
 
 var operationInstallCmd = &cobra.Command{
 	Use:   "install <operation>",
-	Short: "Add an operation to deploy_all.yaml",
+	Short: "Install an operation into the current project",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		pkg := args[0]
@@ -63,12 +64,23 @@ var operationInstallCmd = &cobra.Command{
 
 		match := entries[0]
 		filename := match.name + ".yaml"
+		dst := filepath.Join(dstPlaybooks, filename)
 
+		fmt.Printf("Installing operation: %s\n", filename)
+		if err := copyFile(match.fullPath, dst); err != nil {
+			return err
+		}
 		if err := appendDeployAll(filename); err != nil {
 			return fmt.Errorf("updating deploy_all.yaml: %w", err)
 		}
-		fmt.Printf("Added '%s' to ./playbooks/deploy_all.yaml\n", filename)
-		return nil
+		fmt.Println("Updated ./playbooks/deploy_all.yaml")
+
+		noApply, _ := cmd.Flags().GetBool("no-apply")
+		if noApply {
+			return nil
+		}
+		fmt.Println("Starting operation...")
+		return runApply(filename)
 	},
 }
 
@@ -92,6 +104,7 @@ func runOperationSearch(query string) error {
 }
 
 func init() {
+	operationInstallCmd.Flags().Bool("no-apply", false, "copy files without running apply.sh")
 	operationCmd.AddCommand(operationListCmd)
 	operationCmd.AddCommand(operationSearchCmd)
 	operationCmd.AddCommand(operationActiveCmd)
