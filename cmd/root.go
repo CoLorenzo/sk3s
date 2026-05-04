@@ -21,10 +21,8 @@ func Execute() {
 
 func init() {
 	rootCmd.AddCommand(initCmd)
-	rootCmd.AddCommand(installedCmd)
-	rootCmd.AddCommand(installLsCmd)
-	rootCmd.AddCommand(installSearchCmd)
-	rootCmd.AddCommand(installCmd)
+	rootCmd.AddCommand(installableCmd)
+	rootCmd.AddCommand(operationCmd)
 	rootCmd.AddCommand(uninstallCmd)
 	rootCmd.AddCommand(ctlCmd)
 	rootCmd.AddCommand(nodesCmd)

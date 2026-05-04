@@ -6,16 +6,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var installLsCmd = &cobra.Command{
-	Use:   "install-ls",
+var installableListCmd = &cobra.Command{
+	Use:   "list",
 	Short: "List all available packages",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return runSearch("")
 	},
 }
 
-var installSearchCmd = &cobra.Command{
-	Use:   "install-search <query>",
+var installableSearchCmd = &cobra.Command{
+	Use:   "search <query>",
 	Short: "Search available packages by name",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -40,4 +40,9 @@ func runSearch(query string) error {
 
 	printTable(entries)
 	return nil
+}
+
+func init() {
+	installableCmd.AddCommand(installableListCmd)
+	installableCmd.AddCommand(installableSearchCmd)
 }

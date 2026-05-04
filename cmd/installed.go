@@ -9,8 +9,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var installedCmd = &cobra.Command{
-	Use:   "installed",
+var installableActiveCmd = &cobra.Command{
+	Use:   "active",
 	Short: "List installed packages in the current project",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		type dirType struct {
@@ -73,4 +73,8 @@ func isExcluded(name string, list []string) bool {
 		}
 	}
 	return false
+}
+
+func init() {
+	installableCmd.AddCommand(installableActiveCmd)
 }
